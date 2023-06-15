@@ -1,7 +1,6 @@
 import pygame as pg
 import random
 import settings as s
-
 class Program():
     
     def __init__(self):
@@ -17,7 +16,10 @@ class Program():
     def update(self):
         self.screen.fill("purple")
         self.background_surf.fill(s.BACKGROUND_COLOR)
+        
+    
         pg.Surface.blit(self.screen, self.background_surf, (0, 0))
+        self.screen.blit(pg.image.load("D:\GenCyber\Galaga\Assets\Background.jpg"), (0, 0))
         
         pg.display.flip()
         self.clock.tick(s.FPS)
@@ -33,5 +35,7 @@ class Program():
                     
             self.update()
         pg.quit()
-            
+    
+    
+#Game Code Here:
 Program()
