@@ -19,7 +19,7 @@ class Program():
         
     
         pg.Surface.blit(self.screen, self.background_surf, (0, 0))
-        self.screen.blit(pg.image.load("D:\GenCyber\Galaga\Assets\Background.jpg"), (0, 0))
+        self.screen.blit(pg.image.load("Assets\Background.jpg").convert_alpha(), (0, 0))
         
         pg.display.flip()
         self.clock.tick(s.FPS)
