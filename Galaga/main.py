@@ -12,8 +12,9 @@ while running:
         if event.type == pg.QUIT:
             running = False
     
-    screen.fill("black")
-
+    
+    screen.blit(pg.image.load("D:\GenCyber\Galaga\Assets\Background.jpg"), (0, 0))
+    
 #Game Code Here:
     keys = pg.key.get_pressed()
     def pressed(key):
