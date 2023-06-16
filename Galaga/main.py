@@ -79,7 +79,7 @@ class Program():
             
             HS = open("Highscore.txt", "r+")
 
-            self.highScore_surface = self.font.render("Highscore: " + str(HS.read), False, "White")
+            self.highScore_surface = self.font.render("Highscore: " + str(HS.read()), False, "White")
             pg.Surface.blit(self.screen, self.highScore_surface, (20, 350))
 
             self.coins_surface = self.font.render('Coins: ' + str(coins), False, "Yellow")
@@ -210,10 +210,12 @@ class Bullet(pg.sprite.Sprite):
     def update(self):
         global score
         global enemy
+        global coins
         self.rect.y -= 5
         
         hit_list = pg.sprite.spritecollide(self, enemy, True)
         self.score += len(hit_list)
+        coins += len(hit_list)
         score = self.score
         
         
