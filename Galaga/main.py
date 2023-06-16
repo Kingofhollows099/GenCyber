@@ -1,10 +1,12 @@
 import pygame as pg
 import random as r
 import settings as s
+import Functions as f
 
 cooldown_tracker = 0
 score = 0
 dead = False
+coins = 0
 
 class Program():
     
@@ -49,12 +51,18 @@ class Program():
             enemy.draw(self.screen)
             enemy.update()
         else:
-            self.text_surface = self.font.render('You Died', False, "White")
+            #Deathscreen
+            self.text_surface = self.font.render('You Died', False, "Red")
             pg.Surface.blit(self.screen, self.text_surface, (s.SCREEN_WIDTH / 2 - 200, 150))
+
             self.score_surface = self.font.render(("Score: " + str(score)), False, "White")
             pg.Surface.blit(self.screen, self.score_surface, (s.SCREEN_WIDTH / 2 - 200, 300))
+
             self.text_surface2 = self.font.render('Press R To Retry', False, "White")
-            pg.Surface.blit(self.screen, self.text_surface, (s.SCREEN_WIDTH / 2 - 200, 150))
+            pg.Surface.blit(self.screen, self.text_surface2, (s.SCREEN_WIDTH / 2 - 200, 450))
+
+            
+
         
         pg.display.flip()
         self.clock.tick(s.FPS)
@@ -65,7 +73,7 @@ class Program():
         elif self.cooldown_count > 0:
             self.cooldown_count += 1
         
-            
+#Gameloop here:
     def gameloop(self, running):
         global dead
         global score
@@ -74,20 +82,21 @@ class Program():
                 keys = pg.key.get_pressed()
                 for event in pg.event.get():
                     if event.type == pg.QUIT:
+                        f.Finish(score)
                         running = False
                     if event.type == pg.MOUSEBUTTONDOWN and pg.mouse.get_pressed()[0]:
                         pass
                     if keys[pg.K_ESCAPE]:
+                        f.Finish(score)
                         running = False
             else:
                 keys = pg.key.get_pressed()
                 for event in pg.event.get():
-                    if event.type == pg.QUIT:
-                        running = False
-                    if keys[pg.K_ESCAPE]:
+                    if event.type == pg.QUIT or keys[pg.K_ESCAPE]:
+                        f.Finish(score)
                         running = False
                     if keys[pg.K_r]:
-                        score = 0
+                        f.Finish(score)
                         dead = False
                         
                         
@@ -111,10 +120,17 @@ class Player(pg.sprite.Sprite):
         global enemy
         self.cooldown()
         self.keys = pg.key.get_pressed()
-        if self.keys[pg.K_a]:
+        #Horizontal
+        if self.keys[pg.K_a] :
             self.rect.x -= 10
         if self.keys[pg.K_d]:
             self.rect.x += 10
+        #Verticle
+        if self.keys[pg.K_w]:
+            self.rect.y -= 7.5
+        if self.keys[pg.K_s]:
+            self.rect.y += 7.5
+
         if self.keys[pg.K_SPACE] and self.cooldown_count == 0:
             bullet.add(Bullet(self.rect))
             self.cooldown_count += 1
@@ -155,14 +171,16 @@ class Bullet(pg.sprite.Sprite):
         
         #print(self.score)
 class Enemy(pg.sprite.Sprite):
-    
+    allSkins = ["Galaga/Assets/Enemies/Red.png", "Galaga/Assets/Enemies/Blue.png", "Galaga/Assets/Enemies/Yellow-Blue.png"
+                , "Galaga/Assets/Enemies/Green.png", "Galaga/Assets/Enemies/BigBoy.png"]
     def __init__(self):
+        self.randomFile = r.choice(self.allSkins)
         super().__init__()
-        self.image = pg.image.load('Galaga/Assets/Bullet.png')
+        self.image = pg.transform.rotate(pg.image.load(self.randomFile), -90)
         self.image = pg.transform.smoothscale(self.image, (50, 50))
         self.rect = self.image.get_rect(topleft = (r.randint(100, 1820), 200))
         
-    
+     
     def update(self):
         self.rect.y += 3
         

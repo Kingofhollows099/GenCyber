@@ -1,5 +1,10 @@
 import pygame as pg
+HS = open("Highscore.txt", "r+")
 
-def getScreenSize():
-    print("Hello World!")
+def Finish(score):
+    coins += score // 10
+    oldScore = score
+    if score > HS.read():
+        HS.write(score)
+    score = 0
     
