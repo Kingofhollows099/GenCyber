@@ -1,15 +1,15 @@
 import pygame as pg
 import random as r
 import settings as s
-import Functions as f
 
+HS = open("Highscore.txt", "r+")
 cooldown_tracker = 0
 score = 0
 dead = False
 coins = 0
 
 class Program():
-    
+ 
     def __init__(self):
         global score
         pg.init()
@@ -61,7 +61,8 @@ class Program():
             self.text_surface2 = self.font.render('Press R To Retry', False, "White")
             pg.Surface.blit(self.screen, self.text_surface2, (s.SCREEN_WIDTH / 2 - 200, 450))
 
-            
+            self.highscore_surface = self.font.render('Coins: ' + str(coins), False, "Yellow")
+            pg.Surface.blit(self.screen, self.highscore_surface, (s.SCREEN_WIDTH / 2 - 200, 600))
 
         
         pg.display.flip()
@@ -77,26 +78,28 @@ class Program():
     def gameloop(self, running):
         global dead
         global score
+        global coins
         while running:
             if not dead:
                 keys = pg.key.get_pressed()
                 for event in pg.event.get():
                     if event.type == pg.QUIT:
-                        f.Finish(score)
+                        coins += score // 10
                         running = False
                     if event.type == pg.MOUSEBUTTONDOWN and pg.mouse.get_pressed()[0]:
                         pass
                     if keys[pg.K_ESCAPE]:
-                        f.Finish(score)
+                        coins += score // 10
                         running = False
             else:
                 keys = pg.key.get_pressed()
                 for event in pg.event.get():
                     if event.type == pg.QUIT or keys[pg.K_ESCAPE]:
-                        f.Finish(score)
+                        coins += score // 10
                         running = False
                     if keys[pg.K_r]:
-                        f.Finish(score)
+                        coins += score // 10
+                        score = 0
                         dead = False
                         
                         
@@ -158,7 +161,8 @@ class Bullet(pg.sprite.Sprite):
         self.image = pg.transform.smoothscale(self.image, (50, 50))
         self.rect2 = rect2
         self.score = score
-        self.rect = self.image.get_rect(topleft = (self.rect2.x + 20, 750))
+        self.rect = self.image.get_rect(topleft = (self.rect2.x + 25, self.rect2.y))
+        #self.rect2 = self.image.get_rect(topleft = (self.rect2.x + 50, self.rect2.y)) <--- Second bullet?
         
     def update(self):
         global score
@@ -192,3 +196,12 @@ bullet = pg.sprite.Group()
 enemy = pg.sprite.Group()
 
 Program()
+#Functions def
+
+
+def Finish(score, coins):
+    
+    oldScore = score
+    if score > HS.read():
+        HS.write(score)
+    score = 0
