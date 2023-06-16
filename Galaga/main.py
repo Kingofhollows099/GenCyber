@@ -1,6 +1,7 @@
 import pygame as pg
 import random as r
 import settings as s
+import tkinter as tk
 
 HS = open("Highscore.txt", "r+")
 cooldown_tracker = 0
@@ -124,14 +125,14 @@ class Player(pg.sprite.Sprite):
         self.cooldown()
         self.keys = pg.key.get_pressed()
         #Horizontal
-        if self.keys[pg.K_a] :
+        if self.keys[pg.K_a] and self.rect.left > 0:
             self.rect.x -= 10
-        if self.keys[pg.K_d]:
+        if self.keys[pg.K_d] and self.rect.right < s.SCREEN_WIDTH:
             self.rect.x += 10
         #Verticle
-        if self.keys[pg.K_w]:
+        if self.keys[pg.K_w] and self.rect.top > 0:
             self.rect.y -= 7.5
-        if self.keys[pg.K_s]:
+        if self.keys[pg.K_s] and self.rect.bottom < s.SCREEN_HEIGHT:
             self.rect.y += 7.5
 
         if self.keys[pg.K_SPACE] and self.cooldown_count == 0:
@@ -180,7 +181,7 @@ class Enemy(pg.sprite.Sprite):
     def __init__(self):
         self.randomFile = r.choice(self.allSkins)
         super().__init__()
-        self.image = pg.transform.rotate(pg.image.load(self.randomFile), -90)
+        self.image = pg.transform.rotate(pg.image.load(self.randomFile), 90)
         self.image = pg.transform.smoothscale(self.image, (50, 50))
         self.rect = self.image.get_rect(topleft = (r.randint(100, 1820), 200))
         
