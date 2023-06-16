@@ -76,7 +76,7 @@ class Program():
                     if event.type == pg.QUIT:
                         running = False
                     if event.type == pg.MOUSEBUTTONDOWN and pg.mouse.get_pressed()[0]:
-                        print('surface')
+                        pass
                     if keys[pg.K_ESCAPE]:
                         running = False
             else:
@@ -150,8 +150,8 @@ class Bullet(pg.sprite.Sprite):
         self.rect.y -= 5
         
         hit_list = pg.sprite.spritecollide(self, enemy, True)
-        self.score += len(hit_list)    
-        score = self.score    
+        self.score += len(hit_list)
+        score = self.score
         
         #print(self.score)
 class Enemy(pg.sprite.Sprite):
@@ -172,6 +172,5 @@ player.add(Player())
 bullet = pg.sprite.Group()
 
 enemy = pg.sprite.Group()
-    
-#Game Code Here:
+
 Program()
