@@ -2,6 +2,8 @@ import pygame as pg
 import random
 import settings as s
 
+cooldown_tracker = 0
+
 class Program():
     
     def __init__(self):
@@ -50,18 +52,28 @@ class Player(pg.sprite.Sprite):
         super().__init__()
         self.image = pg.image.load('Galaga/Assets/Ships/Level1.png')
         self.image = pg.transform.smoothscale(self.image, (100, 100))
+        self.clock = pg.time.Clock()
+        self.cooldown_count = 0
         self.rect = self.image.get_rect(midbottom = (s.SCREEN_WIDTH / 2, s.SCREEN_HEIGHT / 1.2))
         
     def input(self):
         global bullet
+        self.cooldown()
         self.keys = pg.key.get_pressed()
         if self.keys[pg.K_a]:
             self.rect.x -= 10
         if self.keys[pg.K_d]:
             self.rect.x += 10
-        if self.keys[pg.K_SPACE]:
+        if self.keys[pg.K_SPACE] and self.cooldown_count == 0:
             bullet.add(Bullet(self.rect))
+            self.cooldown_count += 1
+                
             
+    def cooldown(self):
+        if self.cooldown_count >= 30:
+            self.cooldown_count = 0
+        elif self.cooldown_count > 0:
+            self.cooldown_count += 1
     
     def update(self):
         self.input()
