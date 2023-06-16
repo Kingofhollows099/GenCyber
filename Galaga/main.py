@@ -49,6 +49,7 @@ class Program():
         global coins
         global shipUpgrade
         global speed
+        global score
         ShipUpgradeCosts = [3, 5, 8, 13, 21, 34, 51]
         
         self.cooldown()
@@ -87,7 +88,8 @@ class Program():
             bullet.draw(self.screen)
             
             if self.cooldown_count == 0:
-                enemy.add(Enemy())
+                for i in range(score // 15 + 1):
+                    enemy.add(Enemy())
                 self.cooldown_count += 1
             if self.cooldown_count2 == 0:
                 speed += 1
@@ -104,7 +106,7 @@ class Program():
             self.text_surface = self.font.render('You Died', False, "Red")
             pg.Surface.blit(self.screen, self.text_surface, (20, 50))
 
-            self.score_surface = self.font.render("Score: " + str(self.score), False, "White")
+            self.score_surface = self.font.render("Score: " + str(score), False, "White")
             pg.Surface.blit(self.screen, self.score_surface, (20, 200))
             
             HS = open("Galaga\Highscore.txt", "r+")
@@ -145,6 +147,7 @@ class Program():
         global dead
         global score
         global coins
+        global shipUpgrade
         while running:
 
             Highscore()
@@ -157,8 +160,6 @@ class Program():
                     if event.type == pg.QUIT:
                         coins += score // 10
                         running = False
-                    if event.type == pg.MOUSEBUTTONDOWN and pg.mouse.get_pressed()[0]:
-                        pass
                     if keys[pg.K_ESCAPE]:
                         coins += score // 10
                         running = False
@@ -169,6 +170,13 @@ class Program():
                         coins += score // 10
                         running = False
                     if keys[pg.K_r]:
+                        score = 0
+                        coins = 0
+                        shipUpgrade = 1
+                        player.empty()
+                        bullet.empty()
+                        player.add(Player())
+                        enemy.empty()
                         dead = False
                         
                         
@@ -277,7 +285,6 @@ class Bullet(pg.sprite.Sprite):
         super().__init__()
 
         self.rect2 = rect2
-        self.score = score
         self.type = type
         
         match self.type:
@@ -321,9 +328,8 @@ class Bullet(pg.sprite.Sprite):
         
         
         hit_list = pg.sprite.spritecollide(self, enemy, True)
-        self.score += len(hit_list)
+        score += len(hit_list)
         coins += len(hit_list)
-        score = self.score
 
         
         
