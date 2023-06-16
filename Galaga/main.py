@@ -7,7 +7,7 @@ import tkinter as tk
 cooldown_tracker = 0
 score = 0
 dead = False
-coins = 0
+coins = 100
 shipUpgrade = 1
 
 def Highscore():
@@ -52,6 +52,18 @@ class Program():
             self.score_surface = self.font.render(("Score: " + str(score)), False, "White")
             pg.Surface.blit(self.screen, self.score_surface, (s.SCREEN_WIDTH / 2 - 200, 150))
             
+            self.coins_surface = self.font.render('Coins: ' + str(coins), False, "Yellow")
+            pg.Surface.blit(self.screen, self.coins_surface, (20, 500))
+            
+            self.shop_surface = self.fontMini.render('Press M to purchase ship upgrade. ('+ str(shipUpgrade) +')', False, "White")
+            pg.Surface.blit(self.screen, self.shop_surface, (s.SCREEN_WIDTH-780, 50))
+            
+            ShipUpgradeCosts = [3, 5, 8, 13, 21, 34, 51]
+            
+            self.keys = pg.key.get_pressed()
+            if self.keys[pg.K_m] and coins >= ShipUpgradeCosts[shipUpgrade - 1]:
+                coins -= ShipUpgradeCosts[shipUpgrade - 1]
+                shipUpgrade += 1
             
             player.update()
             player.draw(self.screen)
@@ -93,13 +105,7 @@ class Program():
             pg.Surface.blit(self.screen, self.shop_surface, (s.SCREEN_WIDTH-780, 50))
 
             
-            #Shop                                                                        <--- Add a shooting rate upgrade
-            ShipUpgradeCosts = [3, 5, 8, 13, 21, 34, 51]
-
-            self.keys = pg.key.get_pressed()
-            if self.keys[pg.K_m] and coins >= ShipUpgradeCosts[shipUpgrade - 1]:
-                coins -= ShipUpgradeCosts[shipUpgrade - 1]
-                shipUpgrade += 1
+            #Shop                                                                        <--- Add a shooting rate upgrad
 
 
         
@@ -178,8 +184,7 @@ class Player(pg.sprite.Sprite):
             self.rect.y += 7.5
 
         if self.keys[pg.K_SPACE] and self.cooldown_count == 0:
-            bullet.add(Bullet(self.rect))
-            self.cooldown_count += 1
+            self.upgrades()
                 
             
     def cooldown(self):
@@ -196,16 +201,93 @@ class Player(pg.sprite.Sprite):
         if len(hit_list2) >= 1:
             dead = True
         
+    def upgrades(self):
+        global shipUpgrade
+        match shipUpgrade:
+            case 1:
+                bullet.add(Bullet(self.rect, "bullet1"))
+                self.cooldown_count += 1
+            case 2:
+                bullet.add(Bullet(self.rect, "bullet1"))
+                bullet.add(Bullet(self.rect, "bullet2"))
+                self.cooldown_count += 1
+            case 3:
+                bullet.add(Bullet(self.rect, "bullet1"))
+                bullet.add(Bullet(self.rect, "bullet2"))
+                bullet.add(Bullet(self.rect, "bullet3"))
+                self.cooldown_count += 1
+            case 4:
+                bullet.add(Bullet(self.rect, "bullet1"))
+                bullet.add(Bullet(self.rect, "bullet2"))
+                bullet.add(Bullet(self.rect, "bullet3"))
+                bullet.add(Bullet(self.rect, "bullet4"))
+                self.cooldown_count += 1
+            case 5:
+                bullet.add(Bullet(self.rect, "bullet1"))
+                bullet.add(Bullet(self.rect, "bullet2"))
+                bullet.add(Bullet(self.rect, "bullet3"))
+                bullet.add(Bullet(self.rect, "bullet4"))
+                bullet.add(Bullet(self.rect, "bullet5"))
+                self.cooldown_count += 1
+            case 6:
+                bullet.add(Bullet(self.rect, "bullet1"))
+                bullet.add(Bullet(self.rect, "bullet2"))
+                bullet.add(Bullet(self.rect, "bullet3"))
+                bullet.add(Bullet(self.rect, "bullet4"))
+                bullet.add(Bullet(self.rect, "bullet5"))
+                bullet.add(Bullet(self.rect, "bullet6"))
+                self.cooldown_count += 1
+            case 7:
+                bullet.add(Bullet(self.rect, "bullet1"))
+                bullet.add(Bullet(self.rect, "bullet2"))
+                bullet.add(Bullet(self.rect, "bullet3"))
+                bullet.add(Bullet(self.rect, "bullet4"))
+                bullet.add(Bullet(self.rect, "bullet5"))
+                bullet.add(Bullet(self.rect, "bullet6"))
+                bullet.add(Bullet(self.rect, "bullet7"))
+                self.cooldown_count += 1
+                
+    
 class Bullet(pg.sprite.Sprite):
     
-    def __init__(self, rect2):
+    def __init__(self, rect2, type):
         super().__init__()
-        self.image = pg.image.load('Galaga/Assets/Bullet.png')
-        self.image = pg.transform.smoothscale(self.image, (50, 50))
+
         self.rect2 = rect2
         self.score = score
-        self.rect = self.image.get_rect(topleft = (self.rect2.x + 25, self.rect2.y))
-        #self.rect2 = self.image.get_rect(topleft = (self.rect2.x + 50, self.rect2.y)) <--- Second bullet?
+        self.type = type
+        
+        match self.type:
+            case "bullet1":
+                self.image = pg.image.load('Galaga/Assets/Bullet.png')
+                self.image = pg.transform.smoothscale(self.image, (50, 50))
+                self.rect = self.image.get_rect(topleft = (self.rect2.x + 25, self.rect2.y))
+            case "bullet2":
+                self.image = pg.image.load('Galaga/Assets/Bullet.png')
+                self.image = pg.transform.smoothscale(self.image, (50, 50))
+                self.rect = self.image.get_rect(topleft = (self.rect2.x, self.rect2.y))
+            case "bullet3":
+                self.image = pg.image.load('Galaga/Assets/Bullet.png')
+                self.image = pg.transform.smoothscale(self.image, (50, 50))
+                self.rect = self.image.get_rect(topleft = (self.rect2.x + 50, self.rect2.y))
+            case "bullet4":
+                self.image = pg.image.load('Galaga/Assets/Bullet.png')
+                self.image = pg.transform.smoothscale(self.image, (50, 50))
+                self.rect = self.image.get_rect(topleft = (self.rect2.x - 25, self.rect2.y))
+            case "bullet5":
+                self.image = pg.image.load('Galaga/Assets/Bullet.png')
+                self.image = pg.transform.smoothscale(self.image, (50, 50))
+                self.rect = self.image.get_rect(topleft = (self.rect2.x + 75, self.rect2.y))
+            case "bullet6":
+                self.image = pg.image.load('Galaga/Assets/Bullet.png')
+                self.image = pg.transform.smoothscale(self.image, (50, 50))
+                self.rect = self.image.get_rect(topleft = (self.rect2.x - 50, self.rect2.y))
+            case "bullet7":
+                self.image = pg.image.load('Galaga/Assets/Bullet.png')
+                self.image = pg.transform.smoothscale(self.image, (50, 50))
+                self.rect = self.image.get_rect(topleft = (self.rect2.x + 100, self.rect2.y))
+            
+        #self.rect2 = self.image.get_rect(topleft = (self.rect2.x + 50, self.rect2.y)) <--- Second bullet? Nah I Have Them In Sprite Group We Can Do It In A Better Fashion
         
     def update(self):
         global score
@@ -213,10 +295,12 @@ class Bullet(pg.sprite.Sprite):
         global coins
         self.rect.y -= 5
         
+        
         hit_list = pg.sprite.spritecollide(self, enemy, True)
         self.score += len(hit_list)
         coins += len(hit_list)
         score = self.score
+
         
         
 class Enemy(pg.sprite.Sprite):
