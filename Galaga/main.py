@@ -71,10 +71,10 @@ class Bullet(pg.sprite.Sprite):
     def __init__(self, rect2):
         global player
         super().__init__()
-        self.image = pg.image.load('Galaga/Assets/Ships/Level2.png')
-        self.image = pg.transform.smoothscale(self.image, (100, 100))
+        self.image = pg.image.load('Galaga/Assets/Bullet.png')
+        self.image = pg.transform.smoothscale(self.image, (50, 50))
         self.rect2 = rect2
-        self.rect = self.image.get_rect(midleft = (self.rect2.x, 800))
+        self.rect = self.image.get_rect(topleft = (self.rect2.x + 20, 750))
         
     def update(self):
         self.rect.y -= 5
