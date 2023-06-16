@@ -4,11 +4,11 @@ import settings as s
 import tkinter as tk
 
 
-cooldown_tracker = 0
 score = 0
 dead = False
-coins = 100
+coins = 0
 shipUpgrade = 1
+speed = 3
 
 def Highscore():
     HS = open("Highscore.txt", "r+")
@@ -30,6 +30,7 @@ class Program():
         self.background_surf = pg.image.load("Galaga\Assets\Background.jpg").convert_alpha()
         self.background_surf = pg.transform.smoothscale(self.background_surf, (s.SCREEN_WIDTH, s.SCREEN_HEIGHT))
         self.cooldown_count = 0
+        self.cooldown_count2 = 0
         self.font = pg.font.Font(None, 110)
         self.fontMini = pg.font.Font(None, 60)
         
@@ -43,22 +44,32 @@ class Program():
         global dead
         global coins
         global shipUpgrade
+        global speed
+        ShipUpgradeCosts = [3, 5, 8, 13, 21, 34, 51]
         
         self.cooldown()
         
         if not dead:
             pg.Surface.blit(self.screen, self.background_surf, (0,0))
             
-            self.score_surface = self.font.render(("Score: " + str(score)), False, "White")
-            pg.Surface.blit(self.screen, self.score_surface, (s.SCREEN_WIDTH / 2 - 200, 150))
+            self.score_surface = self.fontMini.render(("Score: " + str(score)), False, "White")
+            pg.Surface.blit(self.screen, self.score_surface, (s.SCREEN_WIDTH - 1500, 50))
             
-            self.coins_surface = self.font.render('Coins: ' + str(coins), False, "Yellow")
-            pg.Surface.blit(self.screen, self.coins_surface, (20, 500))
+            self.coins_surface = self.fontMini.render('Coins: ' + str(coins), False, "Yellow")
+            pg.Surface.blit(self.screen, self.coins_surface, (s.SCREEN_WIDTH - 1500, 100))
+            
+            self.text_surface = self.fontMini.render('Ship Upgrade Cost. ('+ str(ShipUpgradeCosts[shipUpgrade - 1]) +')', False, "Yellow")
+            pg.Surface.blit(self.screen, self.text_surface, (s.SCREEN_WIDTH-780, 100))
             
             self.shop_surface = self.fontMini.render('Press M to purchase ship upgrade. ('+ str(shipUpgrade) +')', False, "White")
             pg.Surface.blit(self.screen, self.shop_surface, (s.SCREEN_WIDTH-780, 50))
             
-            ShipUpgradeCosts = [3, 5, 8, 13, 21, 34, 51]
+            HS = open("Highscore.txt", "r+")
+
+            self.highScore_surface = self.fontMini.render("Highscore: " + str(HS.read()), False, "White")
+            pg.Surface.blit(self.screen, self.highScore_surface, (s.SCREEN_WIDTH - 1300, 50))
+            
+            
             
             self.keys = pg.key.get_pressed()
             if self.keys[pg.K_m] and coins >= ShipUpgradeCosts[shipUpgrade - 1]:
@@ -74,6 +85,9 @@ class Program():
             if self.cooldown_count == 0:
                 enemy.add(Enemy())
                 self.cooldown_count += 1
+            if self.cooldown_count2 == 0:
+                speed += 1
+                self.cooldown_count2 += 1
             
             enemy.draw(self.screen)
             enemy.update()
@@ -117,6 +131,10 @@ class Program():
             self.cooldown_count = 0
         elif self.cooldown_count > 0:
             self.cooldown_count += 1
+        if self.cooldown_count2 >= 900:
+            self.cooldown_count2 = 0
+        elif self.cooldown_count2 > 0:
+            self.cooldown_count2 += 1
         
 #Gameloop here:
     def gameloop(self, running):
@@ -147,8 +165,6 @@ class Program():
                         coins += score // 10
                         running = False
                     if keys[pg.K_r]:
-                        coins += score // 10
-                        score = 0
                         dead = False
                         
                         
@@ -161,6 +177,7 @@ class Player(pg.sprite.Sprite):
     
     def __init__(self):
         super().__init__()
+        global shipUpgrade
         self.image = pg.image.load('Galaga/Assets/Ships/Level' + str(shipUpgrade) + '.png')
         self.image = pg.transform.smoothscale(self.image, (100, 100))
         self.clock = pg.time.Clock()
@@ -196,6 +213,8 @@ class Player(pg.sprite.Sprite):
     def update(self):
         global dead
         self.input()
+        self.image = pg.image.load('Galaga/Assets/Ships/Level' + str(shipUpgrade) + '.png')
+        self.image = pg.transform.smoothscale(self.image, (100, 100))
         
         hit_list2 = pg.sprite.spritecollide(self, enemy, True)
         if len(hit_list2) >= 1:
@@ -307,14 +326,18 @@ class Enemy(pg.sprite.Sprite):
     allSkins = ["Galaga/Assets/Enemies/Red.png", "Galaga/Assets/Enemies/Blue.png", "Galaga/Assets/Enemies/Yellow-Blue.png"
                 , "Galaga/Assets/Enemies/Green.png", "Galaga/Assets/Enemies/BigBoy.png"]
     def __init__(self):
+        global speed
         self.randomFile = r.choice(self.allSkins)
         super().__init__()
         self.image = pg.transform.rotate(pg.image.load(self.randomFile), 90)
         self.image = pg.transform.smoothscale(self.image, (50, 50))
-        self.rect = self.image.get_rect(topleft = (r.randint(100, 1820), 200))
+        self.rect = self.image.get_rect(topleft = (r.randint(400, 1400), 200))
+        self.speed = speed
         
     def update(self):
-        self.rect.y += 3
+        self.rect.y += speed
+        
+        
         
 player = pg.sprite.GroupSingle()
 player.add(Player())
