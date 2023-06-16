@@ -10,8 +10,12 @@ coins = 0
 shipUpgrade = 1
 speed = 3
 
+pg.mixer.init()
+pg.mixer.music.load("Galaga\Assets\Sequenz.mp3")
+pg.mixer.music.play(-1)
+
 def Highscore():
-    HS = open("Highscore.txt", "r+")
+    HS = open("Galaga\Highscore.txt", "r+")
     if score > int(HS.read()):
         HS.seek(0)
         HS.write(str(score))
@@ -64,7 +68,7 @@ class Program():
             self.shop_surface = self.fontMini.render('Press M to purchase ship upgrade. ('+ str(shipUpgrade) +')', False, "White")
             pg.Surface.blit(self.screen, self.shop_surface, (s.SCREEN_WIDTH-780, 50))
             
-            HS = open("Highscore.txt", "r+")
+            HS = open("Galaga\Highscore.txt", "r+")
 
             self.highScore_surface = self.fontMini.render("Highscore: " + str(HS.read()), False, "White")
             pg.Surface.blit(self.screen, self.highScore_surface, (s.SCREEN_WIDTH - 1300, 50))
@@ -103,7 +107,7 @@ class Program():
             self.score_surface = self.font.render("Score: " + str(score), False, "White")
             pg.Surface.blit(self.screen, self.score_surface, (20, 200))
             
-            HS = open("Highscore.txt", "r+")
+            HS = open("Galaga\Highscore.txt", "r+")
 
             self.highScore_surface = self.font.render("Highscore: " + str(HS.read()), False, "White")
             pg.Surface.blit(self.screen, self.highScore_surface, (20, 350))
@@ -144,8 +148,8 @@ class Program():
         while running:
 
             Highscore()
-            FileMangager("Coins.txt", coins)
-            FileMangager("ShipLevel.txt", shipUpgrade)
+            FileMangager("Galaga\Coins.txt", coins)
+            FileMangager("Galaga\ShipLevel.txt", shipUpgrade)
 
             if not dead:# Alive
                 keys = pg.key.get_pressed()
