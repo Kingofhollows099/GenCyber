@@ -1,5 +1,5 @@
 import pygame as pg
-import random
+import random as r
 import settings as s
 
 cooldown_tracker = 0
