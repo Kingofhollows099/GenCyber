@@ -100,7 +100,7 @@ class Program():
             self.text_surface = self.font.render('You Died', False, "Red")
             pg.Surface.blit(self.screen, self.text_surface, (20, 50))
 
-            self.score_surface = self.font.render("Score: " + str(score), False, "White")
+            self.score_surface = self.font.render("Score: " + str(self.score), False, "White")
             pg.Surface.blit(self.screen, self.score_surface, (20, 200))
             
             HS = open("Highscore.txt", "r+")
@@ -312,6 +312,7 @@ class Bullet(pg.sprite.Sprite):
         global score
         global enemy
         global coins
+        global dead
         self.rect.y -= 5
         
         
