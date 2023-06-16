@@ -25,6 +25,7 @@ class Program():
         global player
         global bullet
         global enemy
+        global dead
         
         self.cooldown()
         
@@ -88,6 +89,7 @@ class Program():
                     if keys[pg.K_r]:
                         score = 0
                         dead = False
+                        
                         
                 self.screen.fill('Black')
                     
@@ -158,7 +160,7 @@ class Enemy(pg.sprite.Sprite):
         super().__init__()
         self.image = pg.image.load('Galaga/Assets/Bullet.png')
         self.image = pg.transform.smoothscale(self.image, (50, 50))
-        self.rect = self.image.get_rect(topleft = (random.randint(100, 1820), 200))
+        self.rect = self.image.get_rect(topleft = (r.randint(100, 1820), 200))
         
     
     def update(self):
