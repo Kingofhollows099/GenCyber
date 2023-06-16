@@ -10,20 +10,16 @@ class Program():
         self.background_surf = pg.image.load("Galaga\Assets\Background.jpg").convert_alpha()
         self.background_surf = pg.transform.smoothscale(self.background_surf, (s.SCREEN_WIDTH, s.SCREEN_HEIGHT))
         
-        
-        
         self.running = True
         self.gameloop(self.running)
         
     def update(self):
         global player
-        self.screen.fill("purple")
         
-        self.screen.blit(self.background_surf, (0,0))
+        pg.Surface.blit(self.screen, self.background_surf, (0,0))
         
         player.update()
-        player.draw(self.background_surf)
-        
+        player.draw(self.screen)
         
         pg.display.flip()
         self.clock.tick(s.FPS)
@@ -48,13 +44,17 @@ class Player(pg.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.image = pg.image.load('Galaga/Assets/Ships/Level1.png')
-        self.image = pg.transform.smoothscale(self.image, (200, 200))
-        self.rect = self.image.get_rect(midbottom = (200, 200))
+        self.image = pg.transform.smoothscale(self.image, (100, 100))
+        self.rect = self.image.get_rect(midbottom = (s.SCREEN_WIDTH / 2, s.SCREEN_HEIGHT / 1.2))
         
     def input(self):
         self.keys = pg.key.get_pressed()
-        if self.keys[pg.K_w]:
+        if self.keys[pg.K_a]:
+            self.rect.x -= 10
+        if self.keys[pg.K_d]:
             self.rect.x += 10
+        if self.keys[pg.K_SPACE]:
+            pass
     
     def update(self):
         self.input()
