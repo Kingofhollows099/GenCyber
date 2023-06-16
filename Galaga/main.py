@@ -1,6 +1,7 @@
 import pygame as pg
 import random
 import settings as s
+
 class Program():
     
     def __init__(self):
@@ -15,11 +16,15 @@ class Program():
         
     def update(self):
         global player
+        global bullet
         
         pg.Surface.blit(self.screen, self.background_surf, (0,0))
         
         player.update()
         player.draw(self.screen)
+        
+        bullet.update()
+        bullet.draw(self.screen)
         
         pg.display.flip()
         self.clock.tick(s.FPS)
@@ -48,19 +53,37 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect(midbottom = (s.SCREEN_WIDTH / 2, s.SCREEN_HEIGHT / 1.2))
         
     def input(self):
+        global bullet
         self.keys = pg.key.get_pressed()
         if self.keys[pg.K_a]:
             self.rect.x -= 10
         if self.keys[pg.K_d]:
             self.rect.x += 10
         if self.keys[pg.K_SPACE]:
-            pass
+            bullet.add(Bullet(self.rect))
+            
     
     def update(self):
         self.input()
         
+class Bullet(pg.sprite.Sprite):
+    
+    def __init__(self, rect2):
+        global player
+        super().__init__()
+        self.image = pg.image.load('Galaga/Assets/Ships/Level2.png')
+        self.image = pg.transform.smoothscale(self.image, (100, 100))
+        self.rect2 = rect2
+        self.rect = self.image.get_rect(midleft = (self.rect2.x, 800))
+        
+    def update(self):
+        self.rect.y -= 5
+    
 player = pg.sprite.GroupSingle()
 player.add(Player())
+
+
+bullet = pg.sprite.Group()
     
 #Game Code Here:
 Program()
