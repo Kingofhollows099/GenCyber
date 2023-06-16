@@ -11,8 +11,8 @@ coins = 0
 shipUpgrade = 1
 
 def Highscore():
-     HS = open("Highscore.txt", "r+")
-     if score > int(HS.read()):
+    HS = open("Highscore.txt", "r+")
+    if score > int(HS.read()):
         HS.seek(0)
         HS.write(str(score))
 
@@ -21,7 +21,7 @@ def FileMangager(filepath, value):
     if MFile != value:
         MFile.write(str(value))
 class Program():
- 
+
     def __init__(self):
         global score
         pg.init()
@@ -96,6 +96,7 @@ class Program():
             #Shop                                                                        <--- Add a shooting rate upgrade
             ShipUpgradeCosts = [3, 5, 8, 13, 21, 34, 51]
 
+            self.keys = pg.key.get_pressed()
             if self.keys[pg.K_m] and coins >= ShipUpgradeCosts[shipUpgrade - 1]:
                 coins -= ShipUpgradeCosts[shipUpgrade - 1]
                 shipUpgrade += 1
@@ -226,7 +227,6 @@ class Enemy(pg.sprite.Sprite):
         self.image = pg.transform.smoothscale(self.image, (50, 50))
         self.rect = self.image.get_rect(topleft = (r.randint(100, 1820), 200))
         
-     
     def update(self):
         self.rect.y += 3
         
@@ -240,7 +240,7 @@ enemy = pg.sprite.Group()
 Program()
 #Functions def
 def Finish(score, coins):
-    
+    global HS
     oldScore = score
     if score > HS.read():
         HS.write(score)
