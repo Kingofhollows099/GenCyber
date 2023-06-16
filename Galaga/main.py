@@ -58,10 +58,10 @@ class Program():
             pg.Surface.blit(self.screen, self.background_surf, (0,0))
             
             self.score_surface = self.fontMini.render(("Score: " + str(score)), False, "White")
-            pg.Surface.blit(self.screen, self.score_surface, (s.SCREEN_WIDTH - 1500, 50))
+            pg.Surface.blit(self.screen, self.score_surface, (20, 50))
             
             self.coins_surface = self.fontMini.render('Coins: ' + str(coins), False, "Yellow")
-            pg.Surface.blit(self.screen, self.coins_surface, (s.SCREEN_WIDTH - 1500, 100))
+            pg.Surface.blit(self.screen, self.coins_surface, (20, 100))
             
             self.text_surface = self.fontMini.render('Ship Upgrade Cost. ('+ str(ShipUpgradeCosts[shipUpgrade - 1]) +')', False, "Yellow")
             pg.Surface.blit(self.screen, self.text_surface, (s.SCREEN_WIDTH-780, 100))
